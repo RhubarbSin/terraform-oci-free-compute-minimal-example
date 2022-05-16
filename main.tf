@@ -1,78 +1,28 @@
-terraform {
-  required_providers {
-    oci = {
-      source  = "oracle/oci"
-      version = "~> 4.75.0"
-    }
-  }
-}
-
-variable "tenancy_ocid" {
-  description = "OCID of the tenancy"
-  type        = string
-}
-
-variable "cidr_block" {
-  description = "CIDR block of the VCN"
-  type        = string
-  default     = "10.10.10.0/24"
-
-  validation {
-    condition     = can(cidrsubnets(var.cidr_block, 2))
-    error_message = "The value of cidr_block variable must be a valid CIDR address with a prefix no greater than 30."
-  }
-}
-
-variable "ssh_public_key" {
-  description = "Public key to be used for SSH access to compute instances"
-  type        = string
-}
-
 resource "oci_core_vcn" "this" {
   compartment_id = var.tenancy_ocid
 
   cidr_blocks = [var.cidr_block]
 }
 
-resource "oci_core_subnet" "this" {
-  cidr_block     = oci_core_vcn.this.cidr_blocks.0
+resource "oci_core_internet_gateway" "this" {
   compartment_id = var.tenancy_ocid
   vcn_id         = oci_core_vcn.this.id
 }
 
-data "oci_identity_availability_domains" "this" {
+resource "oci_core_default_route_table" "this" {
+  manage_default_resource_id = oci_core_vcn.this.default_route_table_id
+
+  route_rules {
+    network_entity_id = oci_core_internet_gateway.this.id
+
+    destination = "0.0.0.0/0"
+  }
+}
+
+resource "oci_core_subnet" "this" {
+  cidr_block     = oci_core_vcn.this.cidr_blocks.0
   compartment_id = var.tenancy_ocid
-}
-
-data "oci_core_shapes" "this" {
-  for_each       = toset(data.oci_identity_availability_domains.this.availability_domains[*].name)
-  compartment_id = var.tenancy_ocid
-
-  availability_domain = each.key
-}
-
-locals {
-  shape_micro = "VM.Standard.E2.1.Micro"
-}
-
-locals {
-  availability_domain_micro = one(
-    [
-      for m in data.oci_core_shapes.this :
-      m.availability_domain
-      if contains(m.shapes[*].name, local.shape_micro)
-    ]
-  )
-}
-
-data "oci_core_images" "this" {
-  compartment_id = var.tenancy_ocid
-
-  operating_system = "Oracle Linux"
-  shape            = local.shape_micro
-  sort_by          = "TIMECREATED"
-  sort_order       = "DESC"
-  state            = "available"
+  vcn_id         = oci_core_vcn.this.id
 }
 
 resource "oci_core_instance" "this" {
@@ -84,12 +34,12 @@ resource "oci_core_instance" "this" {
     subnet_id = oci_core_subnet.this.id
   }
 
-  metadata = {
-    ssh_authorized_keys = var.ssh_public_key
-  }
-
   source_details {
     source_id   = data.oci_core_images.this.images.0.id
     source_type = "image"
+  }
+
+  metadata = {
+    ssh_authorized_keys = var.ssh_public_key
   }
 }
