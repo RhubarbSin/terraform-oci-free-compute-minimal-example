@@ -26,5 +26,5 @@
   - One (1) AMD Micro instance running the latest Oracle Linux distribution with the following specifications:
     + 1 OCPU
     + 1 GiB of memory
-    + 50 GiB of storage
+    + 47 GiB of storage
     + 1 public IP address
