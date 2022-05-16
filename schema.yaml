@@ -13,6 +13,9 @@ variables:
     title: Tenancy
     description: OCID of tenancy
     type: oci:identity:compartment:id
+  name:
+    title: Name
+    description: Display name for resources
   cidr_block:
     title: VCN CIDR Block
     description: The CIDR block of the VCN created for the compute instance

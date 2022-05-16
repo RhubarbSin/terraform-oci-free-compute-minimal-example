@@ -3,6 +3,12 @@ variable "tenancy_ocid" {
   type        = string
 }
 
+variable "name" {
+  description = "Display name for resources"
+  type        = string
+  default     = "OCI Free Compute Minimal"
+}
+
 variable "cidr_block" {
   description = "CIDR block of the VCN"
   type        = string
