@@ -40,8 +40,8 @@ resource "oci_core_instance" "this" {
   display_name = var.name
 
   create_vnic_details {
-    display_name   = var.name
-    subnet_id      = oci_core_subnet.this.id
+    display_name = var.name
+    subnet_id    = oci_core_subnet.this.id
   }
 
   source_details {
@@ -51,5 +51,9 @@ resource "oci_core_instance" "this" {
 
   metadata = {
     ssh_authorized_keys = var.ssh_public_key
+  }
+
+  lifecycle {
+    ignore_changes = [source_details.0.source_id]
   }
 }
