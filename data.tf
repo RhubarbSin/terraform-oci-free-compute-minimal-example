@@ -15,7 +15,7 @@ data "oci_core_images" "this" {
 
   operating_system = "Oracle Linux"
   shape            = local.shape_micro
-  sort_by          = "TIMECREATED"
+  sort_by          = "DISPLAYNAME"
   sort_order       = "DESC"
   state            = "available"
 }
