@@ -6,7 +6,7 @@ schemaVersion: 1.1.0
 variables:
   ssh_public_key:
     title: SSH Public Key
-    description: The public SSH key for the key pair used to log into compute instances via SSH
+    description: The public SSH key for the key pair used to log into compute instance via SSH
     type: oci:core:ssh:publickey
     required: true
   tenancy_ocid:

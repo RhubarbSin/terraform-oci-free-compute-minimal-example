@@ -21,6 +21,6 @@ variable "cidr_block" {
 }
 
 variable "ssh_public_key" {
-  description = "Public key to be used for SSH access to compute instances"
+  description = "Public key to be used for SSH access to compute instance"
   type        = string
 }
