@@ -23,7 +23,7 @@
   - One (1) Virtual Cloud Network
   - One (1) Internet Gateway
   - One (1) Subnet
-  - One (1) AMD Micro instance running the latest Oracle Linux distribution available for the VM.Standard.E2.1.Micro shape with the following specifications:
+  - One (1) AMD Micro instance running the latest Oracle Linux distribution with the following specifications:
     + 1 OCPU
     + 1 GiB of memory
     + 47 GiB of storage
