@@ -38,9 +38,9 @@ resource "oci_core_subnet" "this" {
 }
 
 resource "oci_core_instance" "this" {
-  availability_domain = local.availability_domain_micro
+  availability_domain = local.availability_domain
   compartment_id      = var.tenancy_ocid
-  shape               = local.shape_micro
+  shape               = local.shape
 
   display_name = var.name
 
