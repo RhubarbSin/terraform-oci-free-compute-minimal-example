@@ -14,7 +14,7 @@ data "oci_core_images" "this" {
   compartment_id = var.tenancy_ocid
 
   operating_system = "Oracle Linux"
-  shape            = local.shape_micro
+  shape            = local.shape
   sort_by          = "DISPLAYNAME"
   sort_order       = "DESC"
   state            = "available"
